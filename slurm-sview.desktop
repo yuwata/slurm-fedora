@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Slurm sview
+Name[en]=Slurm sview
+Comment=Slurm sview gui to view and modify slurm state
+Comment[en]=Slurm sview gui to view and modify slurm state
+Exec=sview
+Icon=slurm
+Terminal=false
+Type=Application
+Categories=GTK;Network;ParallelComputing

@@ -1,0 +1,53 @@
+--- slurm-17.02.7/src/salloc/salloc.c	2017-08-14 13:48:43.000000000 -0400
++++ slurm-17.02.7/src/salloc/salloc.c.new	2017-08-23 00:07:22.759099425 -0400
+@@ -42,6 +42,7 @@
+ 
+ #include <dirent.h>
+ #include <fcntl.h>
++#include <grp.h>
+ #include <pwd.h>
+ #include <stdbool.h>
+ #include <stdio.h>
+@@ -298,13 +299,27 @@
+ 	if (_fill_job_desc_from_opts(&desc) == -1) {
+ 		exit(error_exit);
+ 	}
+-	if (opt.gid != (gid_t) -1) {
++
++	/* If the requested gid is different than ours, become that gid */
++	if ((getgid() != opt.gid) && (opt.gid != (gid_t) -1)) {
+ 		if (setgid(opt.gid) < 0) {
+ 			error("setgid: %m");
+ 			exit(error_exit);
+ 		}
+ 	}
+ 
++	/* If the requested uid is different than ours, become that uid */
++	if ((getuid() != opt.uid) && (opt.uid != (uid_t) -1)) {
++		if (setgroups(0, NULL) < 0) {
++			error("setgroups: %m");
++			exit(error_exit);
++		}
++		if (setuid(opt.uid) < 0) {
++			error("setuid: %m");
++			exit(error_exit);
++		}
++	}
++
+ 	callbacks.ping = _ping_handler;
+ 	callbacks.timeout = _timeout_handler;
+ 	callbacks.job_complete = _job_complete_handler;
+@@ -333,13 +348,6 @@
+ 		sleep (++retries);
+ 	}
+ 
+-	/* become the user after the allocation has been requested. */
+-	if (opt.uid != (uid_t) -1) {
+-		if (setuid(opt.uid) < 0) {
+-			error("setuid: %m");
+-			exit(error_exit);
+-		}
+-	}
+ 	if (alloc == NULL) {
+ 		if (allocation_interrupted) {
+ 			/* cancelled by signal */

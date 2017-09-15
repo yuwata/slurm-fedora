@@ -1,0 +1,229 @@
+#!/bin/bash
+#
+# Copyright (c) 2017, Philip Kovacs
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+prog=`basename $0`
+user=root
+group=root
+yesno=no
+
+red='\033[0;31m'
+green='\033[0;32m'
+nc='\033[0m'
+pass="${green}[*]${nc}"
+fail="${red}[!]${nc}"
+ask="[?]"
+
+# the rpm spec configures these directory variables
+dir_conf="%{_sysconfdir}/%{name}"
+dir_log="%{_var}/log/%{name}"
+dir_run="%{_rundir}/%{name}"
+dir_spool="%{_var}/spool/%{name}"
+dir_tmpfiles_d="%{_tmpfilesdir}"
+
+file_slurm_conf="${dir_conf}/slurm.conf"
+file_slurmdbd_conf="${dir_conf}/slurmdbd.conf"
+file_tmpfiles_d_conf="${dir_tmpfiles_d}/slurm.conf"
+
+function usage ()
+{
+	echo  -e "Sets the slurm installation on this node to run as the specified user and group\n"
+	echo  "Usage: $prog [-u <user>] [-g <group>] [-h] [-y]"
+	echo  "   -u user>    : the slurm file owner and SlurmUser ($user)"
+	echo  "   -g <group>  : the slurm file group ($group)"
+	echo  "   -y          : answer yes to all questions ($yesno)"
+	echo  "   -h          : print help"
+}
+
+function answer ()
+{
+	while true
+	do
+		if [ "${yesno}" = "yes" ]; then
+			echo -e "${ask} $1 [${yesno}]" 
+			__answer="yes"
+			break;
+		fi
+
+		echo -e -n "${ask} "
+		read -e -p "$1 [${yesno}] " yn
+		case $yn in
+			"")     __answer=$yesno
+				break;;
+			[yY]*)  __answer="yes" 
+				break;;
+			[nN]*)  __answer="no"
+				break;;
+			*) 
+				echo "Please answer yes or no";;
+		esac
+	done
+}
+
+#
+# Parse options
+#
+while getopts "u:g:yh" opt
+do
+	case "$opt" in
+	h) 
+		usage
+		exit 2;;
+	u)
+		user=$OPTARG;;
+	g)
+		group=$OPTARG;;
+	y)
+		yesno=yes;;
+	*) 
+		echo ""
+		usage
+		exit 2;;
+	esac
+done
+
+#
+# Run this script only as root
+#
+if [ $UID -eq 0 ]; then
+	echo -e "${pass} running as root... good"
+else
+	echo -e "${fail} $prog must be run as root."
+	exit 1
+fi
+
+#
+# Validate the user and group
+#
+valid_user="`getent passwd $user || :`"
+if [ -n "$valid_user" ]; then
+	echo -e "${pass} found user $user... good"
+else
+	echo -e "${fail} the specified user was not found... ${user}"
+	exit 2
+fi
+valid_group="`getent group $group || :`"
+if [ -n "$valid_group" ]; then
+	echo -e "${pass} found group $group... good"
+else
+	echo -e "${fail} the specified group was not found... ${group}"
+	exit 2
+fi
+
+#
+# Slurm services must not be running
+#
+slurmctld_running_pid="`ps -e | grep slurmctld | grep -v grep | awk '{print $1}'`"
+if [ -z "$slurmctld_running_pid" ]; then
+	echo -e "${pass} slurmctld is not running... good"
+else
+	echo -e "${fail} slurmctld is running... stop it with [systemctl stop slurmctld]"
+	exit 2
+fi
+slurmd_running_pid="`ps -e | grep slurmd | grep -v grep | awk '{print $1}'`"
+if [ -z "$slurmd_running_pid" ]; then
+	echo -e "${pass} slurmd is not running... good"
+else
+	echo -e "${fail} slurmd is running... stop it with [systemctl stop slurmd]"
+	exit 2
+fi
+slurmdbd_running_pid="`ps -e | grep slurmdbd | grep -v grep | awk '{print $1}'`"
+if [ -z "$slurmdbd_running_pid" ]; then
+	echo -e "${pass} slurmdbd is not running... good"
+else
+	echo -e "${fail} slurmdbd is running... stop it with [systemctl stop slurmdbd]"
+	exit 2
+fi
+
+#
+# Update SlurmUser in the slurm configs
+#
+for file in "$file_slurm_conf" "$file_slurmdbd_conf"
+do
+	if [ -f "$file" ]; then
+		answer "update SlurmUser in $file ?"
+		if [ "$__answer" = "yes" ]; then
+			sed -i "s|^SlurmUser=.*|SlurmUser=${user}|g" $file
+			if [ $? -eq 0 ]; then
+				echo -e "${pass} $file updated successfully"
+			else
+				echo -e "${fail} error updating $file"
+				exit 1
+			fi
+		fi
+	fi
+done
+
+#
+# Update ownership of slurm directories that must be owned by the slurm user
+#
+for dir in "$dir_log" "$dir_run" "$dir_spool" "$dir_spool/ctld"
+do
+	if [ -d "$dir" ]; then
+		answer "update ownership of $dir ?"
+		if [ "$__answer" = "yes" ]; then
+			chown ${user}:${group} $dir
+			if [ $? -eq 0 ]; then
+				echo -e "${pass} $dir updated successfully"
+			else
+				echo -e "${fail} error updating $dir"
+				exit 1
+			fi
+		fi
+	fi
+done
+
+#
+# Update ownership of slurmctld spool files which are owned by the slurm user
+#
+if [ -d "${dir_spool}/ctld" ]; then
+	answer "update ownership of files in ${dir_spool}/ctld ?"
+	if [ "$__answer" = "yes" ]; then
+		if [ $? -eq 0 ]; then
+			find ${dir_spool}/ctld -mindepth 1 -exec chown ${user}:${group} {} \; 
+			echo -e "${pass} ${dir_spool}/ctld files updated successfully"
+		else
+			echo -e "${fail} error updating ${dir_spool}/ctld files"
+			exit 1
+		fi
+	fi
+fi
+
+#
+# Update the tmpfiles.d config file to the new slurm user
+#
+if [ -f "$file_tmpfiles_d_conf" ]; then
+	answer "update tmpfiles.d config $file_tmpfiles_d_conf ?"
+	if [ "$__answer" = "yes" ]; then
+		sed -i "s|0755 \(.*\) -$|0755 ${user} ${group} -|g" $file_tmpfiles_d_conf
+		if [ $? -eq 0 ]; then
+			echo -e "${pass} $file_tmpfiles_d_conf updated successfully"
+		else
+			echo -e "${fail} error updating $file_tmpfiles_d_conf"
+			exit 1
+		fi
+	fi
+fi
+
+exit 0

@@ -1,3 +1,0 @@
-# slurm
-
-The slurm package

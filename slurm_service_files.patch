@@ -1,0 +1,33 @@
+--- slurm-17.02.7/etc/slurmctld.service.in	2017-08-14 13:48:43.000000000 -0400
++++ slurm-17.02.7/etc/slurmctld.service.in.new	2017-08-21 13:35:26.472209176 -0400
+@@ -8,7 +8,7 @@
+ EnvironmentFile=-/etc/sysconfig/slurmctld
+ ExecStart=@sbindir@/slurmctld $SLURMCTLD_OPTIONS
+ ExecReload=/bin/kill -HUP $MAINPID
+-PIDFile=/var/run/slurmctld.pid
++PIDFile=/var/run/slurm/slurmctld.pid
+ 
+ [Install]
+ WantedBy=multi-user.target
+--- slurm-17.02.7/etc/slurmd.service.in	2017-08-14 13:48:43.000000000 -0400
++++ slurm-17.02.7/etc/slurmd.service.in.new	2017-08-21 14:45:23.485061312 -0400
+@@ -8,7 +8,7 @@
+ EnvironmentFile=-/etc/sysconfig/slurmd
+ ExecStart=@sbindir@/slurmd $SLURMD_OPTIONS
+ ExecReload=/bin/kill -HUP $MAINPID
+-PIDFile=/var/run/slurmd.pid
++PIDFile=/var/run/slurm/slurmd.pid
+ KillMode=process
+ LimitNOFILE=51200
+ LimitMEMLOCK=infinity
+--- slurm-17.02.7/etc/slurmdbd.service.in	2017-08-14 13:48:43.000000000 -0400
++++ slurm-17.02.7/etc/slurmdbd.service.in.new	2017-08-21 14:47:56.134071820 -0400
+@@ -8,7 +8,7 @@
+ EnvironmentFile=-/etc/sysconfig/slurmdbd
+ ExecStart=@sbindir@/slurmdbd $SLURMDBD_OPTIONS
+ ExecReload=/bin/kill -HUP $MAINPID
+-PIDFile=/var/run/slurmdbd.pid
++PIDFile=/var/run/slurm/slurmdbd.pid
+ 
+ [Install]
+ WantedBy=multi-user.target
