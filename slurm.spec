@@ -83,8 +83,6 @@ Requires:       %{name}-plugins%{?_isa} = %{version}-%{release}
 Requires:       %{name}-plugins-munge%{?_isa} = %{version}-%{release}
 Requires:       munge
 
-Requires(pre):  shadow-utils
-
 %description
 Slurm is an open source, fault-tolerant, and highly scalable
 cluster management and job scheduling system for large and
