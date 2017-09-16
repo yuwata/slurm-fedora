@@ -26,7 +26,7 @@
 
 Name:           slurm
 Version:        17.02.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -751,5 +751,8 @@ fi
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Sat Sep 16 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.7-2
+- Removed unneeded Requires(pre).
+
 * Thu Sep 14 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.7-1
 - Packaging for Fedora.
