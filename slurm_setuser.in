@@ -50,7 +50,7 @@ function usage ()
 {
 	echo  -e "Sets the slurm installation on this node to run as the specified user and group\n"
 	echo  "Usage: $prog [-u <user>] [-g <group>] [-h] [-y]"
-	echo  "   -u user>    : the slurm file owner and SlurmUser ($user)"
+	echo  "   -u <user>   : the slurm file owner and SlurmUser ($user)"
 	echo  "   -g <group>  : the slurm file group ($group)"
 	echo  "   -y          : answer yes to all questions ($yesno)"
 	echo  "   -h          : print help"

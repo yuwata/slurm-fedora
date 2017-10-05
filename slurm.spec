@@ -26,7 +26,7 @@
 
 Name:           slurm
 Version:        17.02.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -73,6 +73,7 @@ BuildRequires:  numactl-devel
 %endif
 
 BuildRequires:  desktop-file-utils
+BuildRequires:  gcc
 BuildRequires:  perl-ExtUtils-MakeMaker
 BuildRequires:  perl-podlators
 BuildRequires:  pkgconf
@@ -270,7 +271,7 @@ s|^dir_tmpfiles_d=.*|dir_tmpfiles_d="%{_tmpfilesdir}"|g;' \
 PERL_MM_PARAMS="INSTALLDIRS=vendor" %make_build contrib V=0
 
 %check
-make check
+%{__make} check
 
 %install
 %make_install
@@ -403,13 +404,8 @@ rm -f %{buildroot}%{perl_vendorarch}/auto/Slurm*/.packlist
 rm -f %{buildroot}%{perl_vendorarch}/auto/Slurm*/Slurm*.bs
 rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 
-# customize __find_requires to strip out incorrect dependencies
-cat >find-requires <<EOF
-exec %{__find_requires} "$@" | grep -v -E '^libpmix.so|libevent'
-EOF
-chmod +x find-requires
-%global _use_internal_dependency_generator 0
-%global __find_requires %{_builddir}/%{buildsubdir}/find-requires
+# filter unneeded dependencies
+%global __requires_exclude ^libpmix.so|libevent
 
 # -----
 # Slurm
@@ -751,6 +747,9 @@ fi
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Thu Oct 5 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.7-3
+- Added BuildRequires gcc and minor packaging conformance items.
+
 * Sat Sep 16 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.7-2
 - Removed unneeded Requires(pre).
 
