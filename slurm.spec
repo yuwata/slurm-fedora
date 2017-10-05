@@ -26,7 +26,7 @@
 
 Name:           slurm
 Version:        17.02.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -38,16 +38,17 @@ Source4:        slurm-128x128.png
 Source5:        slurm_setuser.in
 
 # upstream bugs #4094, #4095, #4101, #4113
-Patch0:         slurm_salloc_privileges.patch
-Patch1:         slurm_format_truncation.patch
+Patch0:         slurm_opts_restrict.patch
+Patch1:         slurm_salloc_setgroups.patch
+Patch2:         slurm_format_truncation.patch
 
 # build-related patches
-Patch2:         slurm_perlapi_rpaths.patch
-Patch3:         slurm_html_doc_path.patch
-Patch4:         slurm_doc_fix.patch
+Patch3:         slurm_perlapi_rpaths.patch
+Patch4:         slurm_html_doc_path.patch
+Patch5:         slurm_doc_fix.patch
 
 # Fedora-related patches
-Patch5:         slurm_service_files.patch
+Patch6:         slurm_service_files.patch
 
 BuildRequires:  pkgconfig(gtk+-2.0)
 BuildRequires:  hdf5-devel
@@ -219,6 +220,7 @@ Torque wrapper scripts used for helping migrate from Torque/PBS to Slurm.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 cp %SOURCE1 etc/slurm.conf
 cp %SOURCE1 etc/slurm.conf.example
 cp %SOURCE2 etc/slurmdbd.conf
@@ -747,6 +749,11 @@ fi
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Thu Oct 5 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.7-4
+- Patch changes per resolution of upstream bug #4101:
+- salloc/sbatch/srun: must be root to use --uid/--gid options.
+- salloc: supplemental groups dropped after setuid.
+
 * Thu Oct 5 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.7-3
 - Added BuildRequires gcc and minor packaging conformance items.
 

@@ -1,0 +1,72 @@
+--- slurm-17.02.7/src/salloc/opt.c.old	2017-10-05 13:33:36.300529834 -0400
++++ slurm-17.02.7/src/salloc/opt.c	2017-10-05 13:37:02.093162798 -0400
+@@ -1054,6 +1054,10 @@
+ 			}
+ 			break;
+ 		case LONG_OPT_UID:
++			if (getuid() != 0) {
++ 				error("--uid only permitted by root user");
++				exit(error_exit);
++ 			}
+ 			if (opt.euid != (uid_t) -1) {
+ 				error("duplicate --uid option");
+ 				exit(error_exit);
+@@ -1064,6 +1068,10 @@
+ 			}
+ 			break;
+ 		case LONG_OPT_GID:
++			if (getuid() != 0) {
++ 				error("--gid only permitted by root user");
++				exit(error_exit);
++ 			}
+ 			if (opt.egid != (gid_t) -1) {
+ 				error("duplicate --gid option");
+ 				exit(error_exit);
+--- slurm-17.02.7/src/sbatch/opt.c.old	2017-10-05 13:39:04.067419821 -0400
++++ slurm-17.02.7/src/sbatch/opt.c	2017-10-05 13:41:20.388042002 -0400
+@@ -1621,6 +1621,10 @@
+ 			opt.jobid_set = true;
+ 			break;
+ 		case LONG_OPT_UID:
++			if (getuid() != 0) {
++				error("--uid only permitted by root user");
++				exit(error_exit);
++			}
+ 			if (opt.euid != (uid_t) -1) {
+ 				error("duplicate --uid option");
+ 				exit(error_exit);
+@@ -1631,6 +1635,10 @@
+ 			}
+ 			break;
+ 		case LONG_OPT_GID:
++			if (getuid() != 0) {
++				error("--gid only permitted by root user");
++				exit(error_exit);
++			}
+ 			if (opt.egid != (gid_t) -1) {
+ 				error("duplicate --gid option");
+ 				exit(error_exit);
+--- slurm-17.02.7/src/srun/libsrun/opt.c.old	2017-10-05 13:42:57.195643601 -0400
++++ slurm-17.02.7/src/srun/libsrun/opt.c	2017-10-05 13:44:34.753262251 -0400
+@@ -1450,6 +1450,10 @@
+ 				_get_int(optarg, "max-exit-timeout", true);
+ 			break;
+ 		case LONG_OPT_UID:
++			if (getuid() != 0) {
++				error("--uid only permitted by root user");
++				exit(error_exit);
++			}
+ 			if (opt.euid != (uid_t) -1) {
+ 				error("duplicate --uid option");
+ 				exit(error_exit);
+@@ -1460,6 +1464,10 @@
+ 			}
+ 			break;
+ 		case LONG_OPT_GID:
++			if (getuid() != 0) {
++				error("--gid only permitted by root user");
++				exit(error_exit);
++			}
+ 			if (opt.egid != (gid_t) -1) {
+ 				error("duplicate --gid option");
+ 				exit(error_exit);
