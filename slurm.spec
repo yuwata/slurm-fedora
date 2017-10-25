@@ -25,8 +25,8 @@
 # slurm-torque
 
 Name:           slurm
-Version:        17.02.7
-Release:        4%{?dist}
+Version:        17.02.8
+Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -37,19 +37,19 @@ Source3:        slurm-sview.desktop
 Source4:        slurm-128x128.png
 Source5:        slurm_setuser.in
 
-# upstream bugs #4094, #4095, #4101, #4113
-Patch0:         slurm_opts_restrict.patch
-Patch1:         slurm_salloc_setgroups.patch
-Patch2:         slurm_format_truncation.patch
+# upstream bug #3942
+Patch0:         slurm_ac_header_major.patch
 
 # build-related patches
-Patch3:         slurm_perlapi_rpaths.patch
-Patch4:         slurm_html_doc_path.patch
-Patch5:         slurm_doc_fix.patch
+Patch1:         slurm_perlapi_rpaths.patch
+Patch2:         slurm_html_doc_path.patch
+Patch3:         slurm_doc_fix.patch
 
 # Fedora-related patches
-Patch6:         slurm_service_files.patch
+Patch4:         slurm_service_files.patch
 
+BuildRequires:  autoconf
+BuildRequires:  automake
 BuildRequires:  pkgconfig(gtk+-2.0)
 BuildRequires:  hdf5-devel
 BuildRequires:  pkgconfig(hwloc)
@@ -219,8 +219,6 @@ Torque wrapper scripts used for helping migrate from Torque/PBS to Slurm.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
 cp %SOURCE1 etc/slurm.conf
 cp %SOURCE1 etc/slurm.conf.example
 cp %SOURCE2 etc/slurmdbd.conf
@@ -233,6 +231,9 @@ mkdir -p extras
 cp %SOURCE5 extras/slurm_setuser.in
 
 %build
+%{__aclocal} -I auxdir
+%{__autoconf}
+%{__automake} --no-force
 # upstream bug #2443.  need to force lazy linkage since plugins contain
 # undefined symbols not used in every context, i.e. slurmctld vs slurmd.
 CFLAGS="$RPM_OPT_FLAGS -Wl,-z,lazy"
@@ -266,11 +267,11 @@ s|^dir_tmpfiles_d=.*|dir_tmpfiles_d="%{_tmpfilesdir}"|g;' \
     extras/slurm_setuser.in > extras/slurm_setuser
 
 # build base packages
-%make_build V=0
+%make_build V=1
 
 # build contribs packages
 # INSTALLDIRS=vendor so perlapi goes to vendor_perl directory
-PERL_MM_PARAMS="INSTALLDIRS=vendor" %make_build contrib V=0
+PERL_MM_PARAMS="INSTALLDIRS=vendor" %make_build contrib V=1
 
 %check
 %{__make} check
@@ -749,6 +750,9 @@ fi
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Wed Oct 25 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.8-1
+- Version bump, patches adjusted.
+
 * Thu Oct 5 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.7-4
 - Patch changes per resolution of upstream bug #4101:
 - salloc/sbatch/srun: must be root to use --uid/--gid options.

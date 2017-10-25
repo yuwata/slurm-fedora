@@ -1,0 +1,16 @@
+--- slurm-17.02.8/configure.ac.old	2017-10-25 14:35:36.325236357 -0400
++++ slurm-17.02.8/configure.ac	2017-10-25 15:24:41.023876115 -0400
+@@ -124,7 +124,13 @@
+ AC_HEADER_SYS_WAIT
+ AC_HEADER_TIME
+ AC_HEADER_STDC
++
++dnl Workaround for transition of autoconf/glibc issues in deprecation of the
++dnl definitions major, minor, makedev by sys/types.h vs sys/sysmacros.h
++old_CFLAGS=$CFLAGS
++CFLAGS="$CFLAGS -Werror"
+ AC_HEADER_MAJOR
++CFLAGS=$old_CFLAGS
+ 
+ dnl Checks for structures.
+ dnl
