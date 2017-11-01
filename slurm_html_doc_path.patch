@@ -1,5 +1,5 @@
---- slurm-17.02.8/doc/html/Makefile.am.old	2017-10-25 15:55:38.622808585 -0400
-+++ slurm-17.02.8/doc/html/Makefile.am	2017-10-25 15:56:07.236582868 -0400
+--- slurm-17.02.9/doc/html/Makefile.am.old	2017-10-25 15:55:38.622808585 -0400
++++ slurm-17.02.9/doc/html/Makefile.am	2017-10-25 15:56:07.236582868 -0400
 @@ -1,5 +1,5 @@
  
 -htmldir = ${datadir}/doc/${PACKAGE}-${SLURM_VERSION_STRING}/html

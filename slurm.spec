@@ -25,7 +25,7 @@
 # slurm-torque
 
 Name:           slurm
-Version:        17.02.8
+Version:        17.02.9
 Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
@@ -36,9 +36,6 @@ Source2:        slurmdbd.conf
 Source3:        slurm-sview.desktop
 Source4:        slurm-128x128.png
 Source5:        slurm_setuser.in
-
-# upstream bug #3942
-Patch0:         slurm_ac_header_major.patch
 
 # build-related patches
 Patch1:         slurm_perlapi_rpaths.patch
@@ -214,7 +211,6 @@ Torque wrapper scripts used for helping migrate from Torque/PBS to Slurm.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -750,6 +746,11 @@ fi
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Wed Nov 1 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.9-1
+- Version bump to close CVE-2017-15566.
+- Adjusted patches per closure of upstream bug #3942.
+- Added desktop categories per rpmgrill.desktop-lint.
+
 * Wed Oct 25 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.8-1
 - Version bump, patches adjusted.
 
