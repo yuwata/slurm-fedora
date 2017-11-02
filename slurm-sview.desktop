@@ -7,4 +7,4 @@ Exec=sview
 Icon=slurm
 Terminal=false
 Type=Application
-Categories=GTK;Network;ParallelComputing;Science;ComputerScience
+Categories=GTK;Science;ParallelComputing;ComputerScience

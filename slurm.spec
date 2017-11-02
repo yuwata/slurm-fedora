@@ -26,7 +26,7 @@
 
 Name:           slurm
 Version:        17.02.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -746,6 +746,9 @@ fi
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Wed Nov 1 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.9-2
+- Correct desktop categories for rpmgrill.desktop-lint.
+
 * Wed Nov 1 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.9-1
 - Version bump to close CVE-2017-15566.
 - Adjusted patches per closure of upstream bug #3942.
