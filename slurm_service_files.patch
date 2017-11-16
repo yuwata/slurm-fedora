@@ -1,5 +1,5 @@
---- slurm-17.02.9/etc/slurmctld.service.in.old	2017-08-14 13:48:43.000000000 -0400
-+++ slurm-17.02.9/etc/slurmctld.service.in	2017-08-21 13:35:26.472209176 -0400
+--- a/etc/slurmctld.service.in	2017-08-14 13:48:43.000000000 -0400
++++ b/etc/slurmctld.service.in	2017-08-21 13:35:26.472209176 -0400
 @@ -8,7 +8,7 @@
  EnvironmentFile=-/etc/sysconfig/slurmctld
  ExecStart=@sbindir@/slurmctld $SLURMCTLD_OPTIONS
@@ -9,8 +9,8 @@
  
  [Install]
  WantedBy=multi-user.target
---- slurm-17.02.9/etc/slurmd.service.in.old	2017-08-14 13:48:43.000000000 -0400
-+++ slurm-17.02.9/etc/slurmd.service.in	2017-08-21 14:45:23.485061312 -0400
+--- a/etc/slurmd.service.in	2017-08-14 13:48:43.000000000 -0400
++++ b/etc/slurmd.service.in	2017-08-21 14:45:23.485061312 -0400
 @@ -8,7 +8,7 @@
  EnvironmentFile=-/etc/sysconfig/slurmd
  ExecStart=@sbindir@/slurmd $SLURMD_OPTIONS
@@ -20,8 +20,8 @@
  KillMode=process
  LimitNOFILE=51200
  LimitMEMLOCK=infinity
---- slurm-17.02.9/etc/slurmdbd.service.in.old	2017-08-14 13:48:43.000000000 -0400
-+++ slurm-17.02.9/etc/slurmdbd.service.in	2017-08-21 14:47:56.134071820 -0400
+--- a/etc/slurmdbd.service.in	2017-08-14 13:48:43.000000000 -0400
++++ b/etc/slurmdbd.service.in	2017-08-21 14:47:56.134071820 -0400
 @@ -8,7 +8,7 @@
  EnvironmentFile=-/etc/sysconfig/slurmdbd
  ExecStart=@sbindir@/slurmdbd $SLURMDBD_OPTIONS

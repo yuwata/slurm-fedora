@@ -1,5 +1,5 @@
---- slurm-17.02.9/contribs/perlapi/libslurm/perl/Makefile.PL.in.old	2016-11-08 15:11:32.000000000 -0500
-+++ slurm-17.02.9/contribs/perlapi/libslurm/perl/Makefile.PL.in	2017-08-17 03:06:27.363688978 -0400
+--- a/contribs/perlapi/libslurm/perl/Makefile.PL.in	2016-11-08 15:11:32.000000000 -0500
++++ b/contribs/perlapi/libslurm/perl/Makefile.PL.in	2017-08-17 03:06:27.363688978 -0400
 @@ -77,7 +77,7 @@
  # AIX has problems with not always having the correct
  # flags so we have to add some :)
@@ -9,8 +9,8 @@
  $other_ld_flags = " -brtl -G -bnoentry -bgcbypass:1000 -bexpfull"
  	if $os =~ "aix";
  
---- slurm-17.02.9/contribs/perlapi/libslurmdb/perl/Makefile.PL.in.orig	2017-08-17 03:37:39.689054161 -0400
-+++ slurm-17.02.9/contribs/perlapi/libslurmdb/perl/Makefile.PL.in	2017-08-17 03:38:07.305780718 -0400
+--- a/contribs/perlapi/libslurmdb/perl/Makefile.PL.in	2017-08-17 03:37:39.689054161 -0400
++++ b/contribs/perlapi/libslurmdb/perl/Makefile.PL.in	2017-08-17 03:38:07.305780718 -0400
 @@ -76,7 +76,7 @@
  # AIX has problems with not always having the correct
  # flags so we have to add some :)

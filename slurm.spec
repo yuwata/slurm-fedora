@@ -26,7 +26,7 @@
 
 Name:           slurm
 Version:        17.02.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -35,18 +35,22 @@ Source1:        slurm.conf
 Source2:        slurmdbd.conf
 Source3:        slurm-sview.desktop
 Source4:        slurm-128x128.png
-Source5:        slurm_setuser.in
+Source5:        slurm-setuser.in
+
+# upstream bug #2443: enable full relro operation
+Patch0:         slurm_weak_symbols.patch
+
+# upstream bug #4362: link knl_generic plugin to libnuma if available
+Patch1:         slurm_knl_numa.patch
 
 # build-related patches
-Patch1:         slurm_perlapi_rpaths.patch
-Patch2:         slurm_html_doc_path.patch
-Patch3:         slurm_doc_fix.patch
+Patch10:        slurm_perlapi_rpaths.patch
+Patch11:        slurm_html_doc_path.patch
+Patch12:        slurm_doc_fix.patch
 
 # Fedora-related patches
-Patch4:         slurm_service_files.patch
+Patch20:        slurm_service_files.patch
 
-BuildRequires:  autoconf
-BuildRequires:  automake
 BuildRequires:  pkgconfig(gtk+-2.0)
 BuildRequires:  hdf5-devel
 BuildRequires:  pkgconfig(hwloc)
@@ -70,6 +74,8 @@ BuildRequires:  libibumad-devel
 BuildRequires:  numactl-devel
 %endif
 
+BuildRequires:  autoconf
+BuildRequires:  automake
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc
 BuildRequires:  perl-ExtUtils-MakeMaker
@@ -211,10 +217,12 @@ Torque wrapper scripts used for helping migrate from Torque/PBS to Slurm.
 
 %prep
 %setup -q -n %{name}-%{version}
+%patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch20 -p1
 cp %SOURCE1 etc/slurm.conf
 cp %SOURCE1 etc/slurm.conf.example
 cp %SOURCE2 etc/slurmdbd.conf
@@ -224,17 +232,12 @@ mkdir -p share/icons/hicolor/128x128/apps
 cp %SOURCE3 share/applications/%{name}-sview.desktop
 cp %SOURCE4 share/icons/hicolor/128x128/apps/%{name}.png
 mkdir -p extras
-cp %SOURCE5 extras/slurm_setuser.in
+cp %SOURCE5 extras/slurm-setuser.in
 
 %build
 %{__aclocal} -I auxdir
 %{__autoconf}
 %{__automake} --no-force
-# upstream bug #2443.  need to force lazy linkage since plugins contain
-# undefined symbols not used in every context, i.e. slurmctld vs slurmd.
-CFLAGS="$RPM_OPT_FLAGS -Wl,-z,lazy"
-CXXFLAGS="$RPM_OPT_FLAGS -Wl,-z,lazy"
-# --enable-debug (auxdir/x_ac_debug.m4) breaks fortification (-O0)
 %configure \
   --prefix=%{_prefix} \
   --sysconfdir=%{_sysconfdir}/%{name} \
@@ -253,14 +256,14 @@ CXXFLAGS="$RPM_OPT_FLAGS -Wl,-z,lazy"
 # patch libtool to remove rpaths
 sed -i 's|^hardcode_into_libs=.*|hardcode_into_libs=no|g' libtool
 
-# configure the extras/slurm_setuser script
+# configure the extras/slurm-setuser script
 sed -r '
 s|^dir_conf=.*|dir_conf="%{_sysconfdir}/%{name}"|g;
 s|^dir_log=.*|dir_log="%{_var}/log/%{name}"|g;
 s|^dir_run=.*|dir_run="%{_rundir}/%{name}"|g;
 s|^dir_spool=.*|dir_spool="%{_var}/spool/%{name}"|g;
 s|^dir_tmpfiles_d=.*|dir_tmpfiles_d="%{_tmpfilesdir}"|g;' \
-    extras/slurm_setuser.in > extras/slurm_setuser
+    extras/slurm-setuser.in > extras/slurm-setuser
 
 # build base packages
 %make_build V=1
@@ -349,9 +352,9 @@ install -d -m 0755 %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
 install -m 0644 share/icons/hicolor/128x128/apps/%{name}.png \
     %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 
-# install the extras/slurm_setuser script
-install -m 0755 extras/slurm_setuser \
-    %{buildroot}%{_bindir}/slurm_setuser
+# install the extras/slurm-setuser script
+install -m 0755 extras/slurm-setuser \
+    %{buildroot}%{_bindir}/slurm-setuser
 
 install -m 0755 contribs/sjstat %{buildroot}%{_bindir}/sjstat
 
@@ -382,6 +385,7 @@ rm -f %{buildroot}%{_libdir}/%{name}/job_submit_partition.so
 rm -f %{buildroot}%{_libdir}/%{name}/libsched_if.so
 rm -f %{buildroot}%{_libdir}/%{name}/libsched_if64.so
 rm -f %{buildroot}%{_libdir}/%{name}/runjob_plugin.so
+rm -f %{buildroot}%{_libdir}/%{name}/select_bluegene.so
 rm -f %{buildroot}%{_mandir}/man5/bluegene*
 rm -f %{buildroot}%{_sbindir}/sfree
 rm -f %{buildroot}%{_sbindir}/slurm_epilog
@@ -389,7 +393,9 @@ rm -f %{buildroot}%{_sbindir}/slurm_prolog
 # remove cray files
 rm -f %{buildroot}%{_libdir}/%{name}/acct_gather_energy_cray.so
 rm -f %{buildroot}%{_libdir}/%{name}/core_spec_cray.so
+rm -f %{buildroot}%{_libdir}/%{name}/job_container_cncu.so
 rm -f %{buildroot}%{_libdir}/%{name}/job_submit_cray.so
+rm -f %{buildroot}%{_libdir}/%{name}/select_alps.so
 rm -f %{buildroot}%{_libdir}/%{name}/select_cray.so
 rm -f %{buildroot}%{_libdir}/%{name}/switch_cray.so
 rm -f %{buildroot}%{_libdir}/%{name}/task_cray.so
@@ -428,7 +434,7 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %{_bindir}/{sacct,sacctmgr,salloc,sattach,sbatch,sbcast}
 %{_bindir}/{scancel,scontrol,sdiag,sh5util,sinfo,sprio}
 %{_bindir}/{squeue,sreport,srun,sshare,sstat,strigger}
-%{_bindir}/slurm_setuser
+%{_bindir}/slurm-setuser
 %{_unitdir}/slurmctld.service
 %{_unitdir}/slurmd.service
 %{_tmpfilesdir}/slurm.conf
@@ -527,7 +533,7 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %{_libdir}/%{name}/crypto_openssl.so
 %{_libdir}/%{name}/ext_sensors_none.so
 %{_libdir}/%{name}/gres_{gpu,mic,nic}.so
-%{_libdir}/%{name}/job_container_{cncu,none}.so
+%{_libdir}/%{name}/job_container_none.so
 %{_libdir}/%{name}/job_submit_all_partitions.so
 %{_libdir}/%{name}/job_submit_require_timelimit.so
 %{_libdir}/%{name}/job_submit_throttle.so
@@ -546,7 +552,7 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %{_libdir}/%{name}/proctrack_{cgroup,linuxproc,pgid}.so
 %{_libdir}/%{name}/route_{default,topology}.so
 %{_libdir}/%{name}/sched_{backfill,builtin,hold}.so
-%{_libdir}/%{name}/select_{alps,bluegene,cons_res,linear,serial}.so
+%{_libdir}/%{name}/select_{cons_res,linear,serial}.so
 %{_libdir}/%{name}/slurmctld_nonstop.so
 %{_libdir}/%{name}/switch_{generic,none}.so
 %{_libdir}/%{name}/task_{affinity,cgroup,none}.so
@@ -614,7 +620,7 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %{_sysconfdir}/%{name}/slurmdbd.conf.example
 %dir %{_rundir}/%{name}
 %ghost %{_rundir}/%{name}/slurmdbd.pid
-%{_bindir}/slurm_setuser
+%{_bindir}/slurm-setuser
 %{_unitdir}/slurmdbd.service
 %{_tmpfilesdir}/slurm.conf
 %{_sbindir}/slurmdbd
@@ -746,6 +752,14 @@ fi
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Thu Nov 16 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.9-3
+- Added patch to enable full relro builds and operation.
+- Added patch to link knl_generic plugin to libnuma if available.
+- Remove the following cray or bluegene-only plugins:
+- job_container/cncu, select/alps, select/bluegene.
+- Rename slurm_setuser to slurm-setuser.
+- Minor corrections to slurm.conf.
+
 * Wed Nov 1 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.9-2
 - Correct desktop categories for rpmgrill.desktop-lint.
 

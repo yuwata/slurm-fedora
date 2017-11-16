@@ -1,5 +1,5 @@
---- slurm-17.02.9/doc/man/man5/burst_buffer.conf.5.old	2017-08-15 23:22:24.333180212 -0400
-+++ slurm-17.02.9/doc/man/man5/burst_buffer.conf.5	2017-08-15 23:23:45.224298397 -0400
+--- a/doc/man/man5/burst_buffer.conf.5	2017-08-15 23:22:24.333180212 -0400
++++ b/doc/man/man5/burst_buffer.conf.5	2017-08-15 23:23:45.224298397 -0400
 @@ -31,18 +31,18 @@
  \fBAllowUsers\fR
  Comma separated list of user names and/or IDs permitted to use burst buffers.
