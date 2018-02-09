@@ -26,7 +26,7 @@
 
 Name:           slurm
 Version:        17.02.9
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -752,6 +752,9 @@ fi
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 17.02.9-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
 * Thu Nov 16 2017 Philip Kovacs <pkdevel@yahoo.com> - 17.02.9-3
 - Added patch to enable full relro builds and operation.
 - Added patch to link knl_generic plugin to libnuma if available.
