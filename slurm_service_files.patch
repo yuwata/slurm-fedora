@@ -1,17 +1,21 @@
---- a/etc/slurmctld.service.in	2017-08-14 13:48:43.000000000 -0400
-+++ b/etc/slurmctld.service.in	2017-08-21 13:35:26.472209176 -0400
-@@ -8,7 +8,7 @@
+diff --git a/etc/slurmctld.service.in b/etc/slurmctld.service.in
+index ebf92b0da4..d13a653339 100644
+--- a/etc/slurmctld.service.in
++++ b/etc/slurmctld.service.in
+@@ -8,7 +8,7 @@ Type=forking
  EnvironmentFile=-/etc/sysconfig/slurmctld
  ExecStart=@sbindir@/slurmctld $SLURMCTLD_OPTIONS
  ExecReload=/bin/kill -HUP $MAINPID
 -PIDFile=/var/run/slurmctld.pid
 +PIDFile=/var/run/slurm/slurmctld.pid
+ @SYSTEMD_TASKSMAX_OPTION@
  
  [Install]
- WantedBy=multi-user.target
---- a/etc/slurmd.service.in	2017-08-14 13:48:43.000000000 -0400
-+++ b/etc/slurmd.service.in	2017-08-21 14:45:23.485061312 -0400
-@@ -8,7 +8,7 @@
+diff --git a/etc/slurmd.service.in b/etc/slurmd.service.in
+index 2e20bb33a3..263bd8aa77 100644
+--- a/etc/slurmd.service.in
++++ b/etc/slurmd.service.in
+@@ -8,7 +8,7 @@ Type=forking
  EnvironmentFile=-/etc/sysconfig/slurmd
  ExecStart=@sbindir@/slurmd $SLURMD_OPTIONS
  ExecReload=/bin/kill -HUP $MAINPID
@@ -20,14 +24,16 @@
  KillMode=process
  LimitNOFILE=51200
  LimitMEMLOCK=infinity
---- a/etc/slurmdbd.service.in	2017-08-14 13:48:43.000000000 -0400
-+++ b/etc/slurmdbd.service.in	2017-08-21 14:47:56.134071820 -0400
-@@ -8,7 +8,7 @@
+diff --git a/etc/slurmdbd.service.in b/etc/slurmdbd.service.in
+index 5f8f73c7f1..a0aede6feb 100644
+--- a/etc/slurmdbd.service.in
++++ b/etc/slurmdbd.service.in
+@@ -8,7 +8,7 @@ Type=forking
  EnvironmentFile=-/etc/sysconfig/slurmdbd
  ExecStart=@sbindir@/slurmdbd $SLURMDBD_OPTIONS
  ExecReload=/bin/kill -HUP $MAINPID
 -PIDFile=/var/run/slurmdbd.pid
 +PIDFile=/var/run/slurm/slurmdbd.pid
+ @SYSTEMD_TASKSMAX_OPTION@
  
  [Install]
- WantedBy=multi-user.target
