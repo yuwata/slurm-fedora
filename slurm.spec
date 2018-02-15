@@ -18,7 +18,7 @@
 
 Name:           slurm
 Version:        17.11.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -47,6 +47,7 @@ BuildRequires:  environment(modules)
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc
 BuildRequires:  perl-ExtUtils-MakeMaker
+BuildRequires:  perl-interpreter
 BuildRequires:  perl-podlators
 BuildRequires:  pkgconf
 BuildRequires:  pkgconfig(check)
@@ -729,6 +730,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Thu Feb 15 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.3-3
+- Add perl-interpreter to BuildRequires
+
 * Thu Feb 15 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.3-2
 - Rebuild for libevent soname bump
 
