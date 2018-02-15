@@ -18,7 +18,7 @@
 
 Name:           slurm
 Version:        17.11.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -729,6 +729,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Thu Feb 15 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.3-2
+- Rebuild for libevent soname bump
+
 * Sat Feb 10 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.3-1
 - Release of 17.11 series
 - Re-aligned rpm packaging to be closer to upstream
