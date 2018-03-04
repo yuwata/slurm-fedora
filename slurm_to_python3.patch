@@ -1,0 +1,60 @@
+diff --git a/contribs/cray/csm/slurmconfgen_smw.py b/contribs/cray/csm/slurmconfgen_smw.py
+index cf2bf56f82..013181447f 100644
+--- a/contribs/cray/csm/slurmconfgen_smw.py
++++ b/contribs/cray/csm/slurmconfgen_smw.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ #
+ # Copyright 2015-2016 Cray Inc. All Rights Reserved.
+ """ A script to generate slurm.conf and gres.conf for a
+diff --git a/contribs/cray/slurmconfgen.py.in b/contribs/cray/slurmconfgen.py.in
+index b92aabc731..970c5b4802 100644
+--- a/contribs/cray/slurmconfgen.py.in
++++ b/contribs/cray/slurmconfgen.py.in
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python3
+ #
+ # (c) Copyright 2013 Cray Inc.  All Rights Reserved.
+ #
+diff --git a/doc/html/shtml2html.py b/doc/html/shtml2html.py
+index 0b03182b80..43954a37a9 100755
+--- a/doc/html/shtml2html.py
++++ b/doc/html/shtml2html.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ import re
+ import sys
+diff --git a/doc/man/man2html.py b/doc/man/man2html.py
+index 54909096b9..93433d6fa3 100755
+--- a/doc/man/man2html.py
++++ b/doc/man/man2html.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ import re
+ import sys
+diff --git a/testsuite/expect/driveregress.py b/testsuite/expect/driveregress.py
+index 8019615953..4e7eb7ca0f 100755
+--- a/testsuite/expect/driveregress.py
++++ b/testsuite/expect/driveregress.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ ############################################################################
+ # Copyright (C) 2011-2013 SchedMD LLC
+diff --git a/testsuite/expect/regression.py b/testsuite/expect/regression.py
+index 938aecc154..ea64c7cce0 100755
+--- a/testsuite/expect/regression.py
++++ b/testsuite/expect/regression.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ ############################################################################
+ # Copyright (C) 2006 The Regents of the University of California.
+ # Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

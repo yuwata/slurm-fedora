@@ -2,7 +2,7 @@
 %global obs_evr 17.02.9-4
 
 # Upstream tarballs use an additional release number
-%global ups_rel 2
+%global ups_rel 1
 
 %if "%{ups_rel}" == "1"
 %global name_version %{name}-%{version}
@@ -13,12 +13,9 @@
 # Allow linkage with undefined symbols (disable -z,defs)
 %undefine _strict_symbol_defs_build
 
-# Allow dlopen with unresolved symbols (disable -z,now)
-%define _hardened_ldflags "-Wl,-z,lazy"
-
 Name:           slurm
-Version:        17.11.3
-Release:        3%{?dist}
+Version:        17.11.4
+Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -40,18 +37,21 @@ Patch12:        slurm_doc_fix.patch
 # Fedora-related patches
 Patch20:        slurm_pmix_soname.patch
 Patch21:        slurm_service_files.patch
+Patch22:        slurm_to_python3.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  environment(modules)
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc
+BuildRequires:  perl-devel
 BuildRequires:  perl-ExtUtils-MakeMaker
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-podlators
 BuildRequires:  pkgconf
 BuildRequires:  pkgconfig(check)
 %{?systemd_requires}
+BuildRequires:  python3
 BuildRequires:  systemd
 
 BuildRequires:  hdf5-devel
@@ -207,6 +207,7 @@ Torque wrapper scripts used for helping migrate from Torque/PBS to Slurm.
 %patch12 -p1
 %patch20 -p1
 %patch21 -p1
+%patch22 -p1
 cp %SOURCE1 etc/slurm.conf
 cp %SOURCE1 etc/slurm.conf.example
 cp %SOURCE2 etc/slurmdbd.conf
@@ -222,7 +223,9 @@ cp %SOURCE5 extras/%{name}-setuser.in
 %{__aclocal} -I auxdir
 %{__autoconf}
 %{__automake} --no-force
+# use -z lazy to allow dlopen with unresolved symbols
 %configure \
+  LDFLAGS="$LDFLAGS -Wl,-z,lazy" \
   --prefix=%{_prefix} \
   --sysconfdir=%{_sysconfdir}/%{name} \
   --with-pam_dir=%{_libdir}/security \
@@ -434,8 +437,8 @@ rm -f %{buildroot}%{perl_vendorarch}/auto/Slurm*/.packlist
 rm -f %{buildroot}%{perl_vendorarch}/auto/Slurm*/Slurm*.bs
 rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 
-%ldconfig_scriptlets -n devel
-%ldconfig_scriptlets -n lib
+%ldconfig_scriptlets devel
+%ldconfig_scriptlets libs
 
 # -----
 # Slurm
@@ -730,6 +733,12 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Sat Mar 3 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.4-1
+- Release of 17.11.4
+- Add perl-devel, python3 to build requirements
+- Add patch to convert python references to python3
+- Use LDFLAGS to disable -z now instaed of _hardened_ldflags
+
 * Thu Feb 15 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.3-3
 - Add perl-interpreter to BuildRequires
 

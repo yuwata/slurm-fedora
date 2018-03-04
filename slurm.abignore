@@ -1,0 +1,10 @@
+[suppress_file]
+# suppress abi check for anything not in /usr/lib or /usr/lib64
+filename_not_regexp = (/usr/lib/.*|/usr/lib64/.*)
+
+# suppress abi check for the slurm plugins
+filename_regexp = (/usr/lib/slurm/.*|/usr/lib64/slurm/.*)
+
+[suppress_type]
+# suppress abi check for the slurm internal library
+soname_regexp = libslurmfull*
