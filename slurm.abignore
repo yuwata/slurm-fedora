@@ -7,4 +7,4 @@ filename_regexp = (/usr/lib/slurm/.*|/usr/lib64/slurm/.*)
 
 [suppress_type]
 # suppress abi check for the slurm internal library
-soname_regexp = libslurmfull*
+soname_regexp = libslurmfull.*

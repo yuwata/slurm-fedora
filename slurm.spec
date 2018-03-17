@@ -14,7 +14,7 @@
 %undefine _strict_symbol_defs_build
 
 Name:           slurm
-Version:        17.11.4
+Version:        17.11.5
 Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
@@ -733,6 +733,10 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Fri Mar 16 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.5-1
+- Release of 17.11.5
+- Closes security issue CVE-2018-7033
+
 * Sat Mar 3 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.4-1
 - Release of 17.11.4
 - Add perl-devel, python3 to build requirements
