@@ -15,7 +15,7 @@
 
 Name:           slurm
 Version:        17.11.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -712,7 +712,7 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_preun slurmctld.service
 
 %postun slurmctld
-%systemd_postun_with_restart slurmcltd.service
+%systemd_postun_with_restart slurmctld.service
 
 %post slurmd
 %systemd_post slurmd.service
@@ -733,6 +733,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Tue Mar 20 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.5-2
+- Fix typo in systemd macro
+
 * Fri Mar 16 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.5-1
 - Release of 17.11.5
 - Closes security issue CVE-2018-7033
