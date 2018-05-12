@@ -14,8 +14,8 @@
 %undefine _strict_symbol_defs_build
 
 Name:           slurm
-Version:        17.11.5
-Release:        2%{?dist}
+Version:        17.11.6
+Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -33,6 +33,7 @@ Patch0:         slurm_libslurmfull_version.patch
 Patch10:        slurm_perlapi_rpaths.patch
 Patch11:        slurm_html_doc_path.patch
 Patch12:        slurm_doc_fix.patch
+Patch13:        slurm_do_not_build_cray.patch
 
 # Fedora-related patches
 Patch20:        slurm_pmix_soname.patch
@@ -50,7 +51,6 @@ BuildRequires:  perl-interpreter
 BuildRequires:  perl-podlators
 BuildRequires:  pkgconf
 BuildRequires:  pkgconfig(check)
-%{?systemd_requires}
 BuildRequires:  python3
 BuildRequires:  systemd
 
@@ -58,8 +58,9 @@ BuildRequires:  hdf5-devel
 BuildRequires:  pam-devel
 BuildRequires:  pkgconfig(gtk+-2.0)
 BuildRequires:  pkgconfig(hwloc)
-BuildRequires:  pkgconfig(libfreeipmi)
 BuildRequires:  pkgconfig(libcurl)
+BuildRequires:  pkgconfig(libfreeipmi)
+BuildRequires:  pkgconfig(liblz4)
 BuildRequires:  pkgconfig(librrd)
 BuildRequires:  pkgconfig(libssh2)
 BuildRequires:  pkgconfig(lua)
@@ -73,13 +74,13 @@ BuildRequires:  readline-devel
 
 # follow arch exclusions for these devel packages
 %ifnarch s390 s390x %{arm}
-BuildRequires:  libibmad-devel
-BuildRequires:  libibumad-devel
+BuildRequires:  rdma-core-devel
 BuildRequires:  numactl-devel
 %endif
 
 Requires:       munge
 Requires:       pmix >= 2.0.0
+%{?systemd_requires}
 
 Obsoletes:      %{name} <= %{obs_evr}
 Obsoletes:      %{name}-plugins <= %{obs_evr}
@@ -90,19 +91,20 @@ Obsoletes:      %{name}-plugins-mysql <= %{obs_evr}
 
 %description
 Slurm is an open source, fault-tolerant, and highly scalable
-cluster management and job scheduling system for large and
-small Linux clusters.
+cluster management and job scheduling system for Linux clusters.
+Components include machine status, partition management,
+job management, scheduling and accounting modules.
 
 # -------------
 # Base Packages
 # -------------
 
 %package devel
-Summary: Slurm development
+Summary: Development package for Slurm
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 %description devel
-Development package for Slurm.  Includes headers, libraries
-and man pages for using the Slurm API.
+Development package for Slurm.  This package includes the header files
+and libraries for the Slurm API.
 
 %package doc
 Summary: Slurm documentation
@@ -183,13 +185,14 @@ Perl API package for Slurm.  This package includes the perl API to provide a
 helpful interface to Slurm through Perl.
 
 %package pam_slurm
-Summary: Slurm pam modules
+Summary: PAM module for restricting access to compute nodes via Slurm
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Obsoletes: %{name}-plugins-pam_slurm <= %{obs_evr}
 %description pam_slurm
-The pam_slurm module restricts access to compute nodes in a cluster where Slurm
-is in use.  Also includes the pam_slurm_adopt plugin for "adopting" connections
-into slurm jobs.
+This module restricts access to compute nodes in a cluster where Slurm
+is in use.  Access is granted to root, any user with a Slurm-launched job
+currently running on the node, or any user who has allocated resources
+on the node according to Slurm.
 
 %package torque
 Summary: Torque/PBS wrappers for transition from Torque/PBS to Slurm
@@ -205,6 +208,7 @@ Torque wrapper scripts used for helping migrate from Torque/PBS to Slurm.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
@@ -733,8 +737,13 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
-* Tue Mar 20 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.5-2
-- Fix typo in systemd macro
+* Sat May 12 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.6-1
+- Release of 17.11.6
+- Added patch to avoid building contribs/cray (Yu Watanabe)
+- Added lz4 support via new BuildRequires (Yu Watanabe)
+- Replaced obsolete packages libibmad-devel and libibumad-devel
+  with rdma-core-devel (Yu Watanabe)
+- Updated package descriptions (Yu Watanabe)
 
 * Fri Mar 16 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.5-1
 - Release of 17.11.5
