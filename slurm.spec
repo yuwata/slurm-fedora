@@ -14,7 +14,7 @@
 %undefine _strict_symbol_defs_build
 
 Name:           slurm
-Version:        17.11.6
+Version:        17.11.7
 Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
@@ -737,6 +737,10 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Fri Jun 1 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.7-1
+- Release of 17.11.7
+- Closes security issue CVE-2018-10995
+
 * Sat May 12 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.6-1
 - Release of 17.11.6
 - Added patch to avoid building contribs/cray (Yu Watanabe)
