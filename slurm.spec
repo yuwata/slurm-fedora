@@ -15,7 +15,7 @@
 
 Name:           slurm
 Version:        17.11.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -737,6 +737,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Wed Jun 27 2018 Jitka Plesnikova <jplesnik@redhat.com> - 17.11.7-2
+- Perl 5.28 rebuild
+
 * Fri Jun 1 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.7-1
 - Release of 17.11.7
 - Closes security issue CVE-2018-10995
