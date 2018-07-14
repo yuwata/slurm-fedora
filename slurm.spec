@@ -15,7 +15,7 @@
 
 Name:           slurm
 Version:        17.11.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -737,6 +737,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 17.11.7-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Wed Jun 27 2018 Jitka Plesnikova <jplesnik@redhat.com> - 17.11.7-2
 - Perl 5.28 rebuild
 
