@@ -14,7 +14,7 @@
 %undefine _strict_symbol_defs_build
 
 Name:           slurm
-Version:        17.11.8
+Version:        17.11.9
 Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
@@ -737,6 +737,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Fri Aug 10 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.9-1
+- Release of 17.11.9
+
 * Fri Jul 20 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.8-1
 - Release of 17.11.8
 
