@@ -1,8 +1,5 @@
-# Obsolete EVR
-%global obs_evr 17.02.9-4
-
 # Upstream tarballs use an additional release number
-%global ups_rel 1
+%global ups_rel 2
 
 %if "%{ups_rel}" == "1"
 %global name_version %{name}-%{version}
@@ -15,7 +12,7 @@
 
 Name:           slurm
 Version:        17.11.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -82,13 +79,6 @@ Requires:       munge
 Requires:       pmix >= 2.0.0
 %{?systemd_requires}
 
-Obsoletes:      %{name} <= %{obs_evr}
-Obsoletes:      %{name}-plugins <= %{obs_evr}
-Obsoletes:      %{name}-plugins-auth_none <= %{obs_evr}
-Obsoletes:      %{name}-plugins-lua <= %{obs_evr}
-Obsoletes:      %{name}-plugins-munge <= %{obs_evr}
-Obsoletes:      %{name}-plugins-mysql <= %{obs_evr}
-
 %description
 Slurm is an open source, fault-tolerant, and highly scalable
 cluster management and job scheduling system for Linux clusters.
@@ -129,7 +119,6 @@ Slurm shared libraries.
 %package rrdtool
 Summary: Slurm rrdtool external sensor plugin
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Obsoletes: %{name}-plugins-rrdtool <= %{obs_evr}
 %description rrdtool
 Slurm external sensor plugin for rrdtool. This package is separated from
 the base plugins package due to gui dependencies which are unneeded if not
@@ -138,7 +127,6 @@ using this plugin.
 %package slurmctld
 Summary: Slurm controller daemon
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Obsoletes: %{name} <= %{obs_evr}
 %description slurmctld
 Slurm controller daemon. Used to manage the job queue, schedule jobs,
 and dispatch RPC messages to the slurmd processon the compute nodes
@@ -147,7 +135,6 @@ to launch jobs.
 %package slurmd
 Summary: Slurm compute node daemon
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Obsoletes: %{name} <= %{obs_evr}
 %description slurmd
 Slurm compute node daemon. Used to launch jobs on compute nodes
 
@@ -187,7 +174,6 @@ helpful interface to Slurm through Perl.
 %package pam_slurm
 Summary: PAM module for restricting access to compute nodes via Slurm
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
-Obsoletes: %{name}-plugins-pam_slurm <= %{obs_evr}
 %description pam_slurm
 This module restricts access to compute nodes in a cluster where Slurm
 is in use.  Access is granted to root, any user with a Slurm-launched job
@@ -198,7 +184,6 @@ on the node according to Slurm.
 Summary: Torque/PBS wrappers for transition from Torque/PBS to Slurm
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: %{name}-perlapi%{?_isa} = %{version}-%{release}
-Obsoletes: %{name}-plugins-pbs <= %{obs_evr}
 %description torque
 Torque wrapper scripts used for helping migrate from Torque/PBS to Slurm.
 
@@ -737,6 +722,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Fri Sep 28 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.9-2
+- Release of 17.11.9-2 (new upstream tarball)
+
 * Fri Aug 10 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.9-1
 - Release of 17.11.9
 
