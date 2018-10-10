@@ -1,5 +1,5 @@
 # Upstream tarballs use an additional release number
-%global ups_rel 2
+%global ups_rel 1
 
 %if "%{ups_rel}" == "1"
 %global name_version %{name}-%{version}
@@ -11,8 +11,8 @@
 %undefine _strict_symbol_defs_build
 
 Name:           slurm
-Version:        17.11.9
-Release:        2%{?dist}
+Version:        17.11.10
+Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
 URL:            https://slurm.schedmd.com/
@@ -722,6 +722,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Fri Oct 11 2018 Yu Watanabe <watanabe.yu@gmail.com> - 17.11.10-1
+- Release of 17.11.10
+
 * Fri Sep 28 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.9-2
 - Release of 17.11.9-2 (new upstream tarball)
 
