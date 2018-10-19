@@ -1,0 +1,23 @@
+From ed18efe7f2946ea47ad40eeea219a8dbf25e0412 Mon Sep 17 00:00:00 2001
+From: Yu Watanabe <watanabe.yu+github@gmail.com>
+Date: Sat, 20 Oct 2018 04:19:13 +0900
+Subject: [PATCH 3/7] Build: Fix path to html documents
+
+---
+ doc/html/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/doc/html/Makefile.am b/doc/html/Makefile.am
+index 7bff6203fe..b7996e4fb1 100644
+--- a/doc/html/Makefile.am
++++ b/doc/html/Makefile.am
+@@ -1,5 +1,5 @@
+ 
+-htmldir = ${datadir}/doc/${PACKAGE}-${SLURM_VERSION_STRING}/html
++htmldir = ${datadir}/doc/${PACKAGE}/html
+ 
+ generated_html = \
+ 	accounting.html \
+-- 
+2.17.2
+

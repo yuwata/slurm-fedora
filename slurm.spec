@@ -11,7 +11,7 @@
 %undefine _strict_symbol_defs_build
 
 Name:           slurm
-Version:        17.11.11
+Version:        18.08.2
 Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
@@ -24,18 +24,19 @@ Source4:        slurm-128x128.png
 Source5:        slurm-setuser.in
 
 # Upstream bug #4449: release-style versioning of libslurmfull
-Patch0:         slurm_libslurmfull_version.patch
+Patch0:         0001-API-Fix-release-style-versioning-of-libslurmfull.patch
 
 # Build-related patches
-Patch10:        slurm_perlapi_rpaths.patch
-Patch11:        slurm_html_doc_path.patch
-Patch12:        slurm_doc_fix.patch
-Patch13:        slurm_do_not_build_cray.patch
+Patch10:        0002-Build-Fix-perlapi-rpath.patch
+Patch11:        0003-Build-Fix-path-to-html-documents.patch
+Patch12:        0004-Build-do-not-build-cray-related-modules.patch
+Patch13:        0008-Build-disable-xtree-test.patch
+#Patch12:        slurm_doc_fix.patch
 
 # Fedora-related patches
-Patch20:        slurm_pmix_soname.patch
-Patch21:        slurm_service_files.patch
-Patch22:        slurm_to_python3.patch
+Patch20:        0005-Fedora-fix-pmix-soname.patch
+Patch21:        0006-Fedora-fix-path-to-PIDFile-in-service-files.patch
+Patch22:        0007-Fedora-use-python3.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -266,8 +267,6 @@ install -m 0644 -p etc/cgroup.conf.example \
     %{buildroot}%{_sysconfdir}/%{name}
 install -m 0644 -p etc/cgroup.conf.example \
     %{buildroot}%{_sysconfdir}/%{name}/cgroup.conf
-install -m 0644 -p etc/cgroup_allowed_devices_file.conf.example \
-    %{buildroot}%{_sysconfdir}/%{name}
 install -m 0644 -p etc/layouts.d.power.conf.example \
     %{buildroot}%{_sysconfdir}/%{name}/layouts.d/power.conf.example
 install -m 0644 -p etc/layouts.d.power_cpufreq.conf.example \
@@ -278,7 +277,6 @@ install -m 0644 -p etc/slurm.conf %{buildroot}%{_sysconfdir}/%{name}
 install -m 0644 -p etc/slurm.conf.example %{buildroot}%{_sysconfdir}/%{name}
 install -m 0644 -p etc/slurmdbd.conf %{buildroot}%{_sysconfdir}/%{name}
 install -m 0644 -p etc/slurmdbd.conf.example %{buildroot}%{_sysconfdir}/%{name}
-install -m 0644 -p etc/slurm.epilog.clean %{buildroot}%{_sysconfdir}/%{name}
 install -m 0644 -p etc/slurmctld.service %{buildroot}%{_unitdir}
 install -m 0644 -p etc/slurmd.service %{buildroot}%{_unitdir}
 install -m 0644 -p etc/slurmdbd.service %{buildroot}%{_unitdir}
@@ -444,7 +442,6 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %dir %{_var}/spool/%{name}
 %dir %{_var}/spool/%{name}/ctld
 %dir %{_var}/spool/%{name}/d
-%attr(0755,root,root) %{_sysconfdir}/%{name}/slurm.epilog.clean
 %config(noreplace) %{_sysconfdir}/%{name}/cgroup*.conf
 %config(noreplace) %{_sysconfdir}/%{name}/slurm.conf
 %{_bindir}/{sacct,sacctmgr,salloc,sattach,sbatch,sbcast}
@@ -455,7 +452,7 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %{_libdir}/%{name}/acct_gather_energy_{ibmaem,ipmi,none,rapl}.so
 %{_libdir}/%{name}/acct_gather_filesystem_{lustre,none}.so
 %{_libdir}/%{name}/acct_gather_interconnect_{none,ofed}.so
-%{_libdir}/%{name}/acct_gather_profile_{hdf5,none}.so
+%{_libdir}/%{name}/acct_gather_profile_{hdf5,influxdb,none}.so
 %{_libdir}/%{name}/auth_munge.so
 %{_libdir}/%{name}/burst_buffer_generic.so
 %{_libdir}/%{name}/checkpoint_{none,ompi}.so
@@ -722,6 +719,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
+* Sat Oct 20 2018 Yu Watanabe <watanabe.yu@gmail.com> - 17.08.2-1
+- Release of 18.08.2
+
 * Sat Oct 20 2018 Yu Watanabe <watanabe.yu@gmail.com> - 17.11.11-1
 - Release of 17.11.11
 

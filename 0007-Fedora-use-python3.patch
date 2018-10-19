@@ -1,3 +1,17 @@
+From ab2930805ef93ad2b7a20a4f2c2e2bac4f6d6bd3 Mon Sep 17 00:00:00 2001
+From: Yu Watanabe <watanabe.yu+github@gmail.com>
+Date: Sat, 20 Oct 2018 04:34:27 +0900
+Subject: [PATCH 7/7] Fedora: use python3
+
+---
+ contribs/cray/csm/slurmconfgen_smw.py | 2 +-
+ contribs/cray/slurmconfgen.py.in      | 2 +-
+ doc/html/shtml2html.py                | 2 +-
+ doc/man/man2html.py                   | 2 +-
+ testsuite/expect/driveregress.py      | 2 +-
+ testsuite/expect/regression.py        | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
 diff --git a/contribs/cray/csm/slurmconfgen_smw.py b/contribs/cray/csm/slurmconfgen_smw.py
 index cf2bf56f82..013181447f 100644
 --- a/contribs/cray/csm/slurmconfgen_smw.py
@@ -39,7 +53,7 @@ index 54909096b9..93433d6fa3 100755
  import re
  import sys
 diff --git a/testsuite/expect/driveregress.py b/testsuite/expect/driveregress.py
-index 8019615953..4e7eb7ca0f 100755
+index 3e4a43f29c..a3c9689aea 100755
 --- a/testsuite/expect/driveregress.py
 +++ b/testsuite/expect/driveregress.py
 @@ -1,4 +1,4 @@
@@ -49,7 +63,7 @@ index 8019615953..4e7eb7ca0f 100755
  ############################################################################
  # Copyright (C) 2011-2013 SchedMD LLC
 diff --git a/testsuite/expect/regression.py b/testsuite/expect/regression.py
-index 938aecc154..ea64c7cce0 100755
+index aa3b159e19..4ec116b309 100755
 --- a/testsuite/expect/regression.py
 +++ b/testsuite/expect/regression.py
 @@ -1,4 +1,4 @@
@@ -58,3 +72,6 @@ index 938aecc154..ea64c7cce0 100755
  ############################################################################
  # Copyright (C) 2006 The Regents of the University of California.
  # Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+-- 
+2.17.2
+

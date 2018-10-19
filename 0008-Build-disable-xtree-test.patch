@@ -1,0 +1,29 @@
+From 3d11121529b0272568c37774a3a40dc3366631fd Mon Sep 17 00:00:00 2001
+From: Yu Watanabe <watanabe.yu+github@gmail.com>
+Date: Sat, 20 Oct 2018 10:50:06 +0900
+Subject: [PATCH] Build: disable xtree-test
+
+---
+ testsuite/slurm_unit/common/Makefile.am | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/testsuite/slurm_unit/common/Makefile.am b/testsuite/slurm_unit/common/Makefile.am
+index 67dc4d9a8d..b5ebca19c8 100644
+--- a/testsuite/slurm_unit/common/Makefile.am
++++ b/testsuite/slurm_unit/common/Makefile.am
+@@ -13,15 +13,3 @@ TESTS = \
+ 	job-resources-test \
+ 	log-test \
+ 	pack-test
+-
+-if HAVE_CHECK
+-MYCFLAGS  = @CHECK_CFLAGS@ -Wall -ansi -pedantic -std=c99
+-MYCFLAGS += -D_ISO99_SOURCE -Wunused-but-set-variable
+-TESTS += xtree-test \
+-	 xhash-test
+-xtree_test_CFLAGS = $(MYCFLAGS)
+-xtree_test_LDADD  = $(LDADD) @CHECK_LIBS@
+-xhash_test_CFLAGS = $(MYCFLAGS)
+-xhash_test_LDADD  = $(LDADD) @CHECK_LIBS@
+-endif
+-

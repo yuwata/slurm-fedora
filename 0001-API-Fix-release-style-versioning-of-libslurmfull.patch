@@ -1,0 +1,40 @@
+From 60b7fb220e50e4962c54d45ac653209844479620 Mon Sep 17 00:00:00 2001
+From: Yu Watanabe <watanabe.yu+github@gmail.com>
+Date: Sat, 20 Oct 2018 04:15:10 +0900
+Subject: [PATCH 1/7] API: Fix release-style versioning of libslurmfull
+
+See upstream bug #4449.
+---
+ src/api/Makefile.am | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/src/api/Makefile.am b/src/api/Makefile.am
+index 200340e5a0..fd4281bfbc 100644
+--- a/src/api/Makefile.am
++++ b/src/api/Makefile.am
+@@ -44,12 +44,7 @@ current = $(SLURM_API_CURRENT)
+ age     = $(SLURM_API_AGE)
+ rev     = $(SLURM_API_REVISION)
+ 
+-lib_LTLIBRARIES = libslurm.la
+-
+-# The ABI of libslurmfull can easily change from 1 micro version to another.
+-# To avoid issue we will install this lib alongside the plugins to protect
+-# from version issues.
+-pkglib_LTLIBRARIES = libslurmfull.la
++lib_LTLIBRARIES = libslurm.la libslurmfull.la
+ 
+ # BUILT_SOURCES tells automake that when "make" is called, these targets
+ # need to be built before anything else.
+@@ -137,7 +132,7 @@ libslurmfull_la_SOURCES =
+ libslurmfull_la_LIBADD = $(convenience_libs)
+ libslurmfull_la_LDFLAGS        = \
+         $(LIB_LDFLAGS) \
+-	-avoid-version \
++	-release $(SLURM_VERSION_STRING) \
+         $(FULL_OTHER_FLAGS)
+ 
+ # This was made so we could export all symbols from libcommon
+-- 
+2.17.2
+
