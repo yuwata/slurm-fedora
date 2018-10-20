@@ -11,7 +11,7 @@
 %undefine _strict_symbol_defs_build
 
 Name:           slurm
-Version:        17.11.10
+Version:        17.11.11
 Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
@@ -722,8 +722,8 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
-* Thu Oct 11 2018 Yu Watanabe <watanabe.yu@gmail.com> - 17.11.10-1
-- Release of 17.11.10
+* Sat Oct 20 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.1-1
+- Release of 17.11.11
 
 * Fri Sep 28 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.9-2
 - Release of 17.11.9-2 (new upstream tarball)
