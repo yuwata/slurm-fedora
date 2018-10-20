@@ -725,6 +725,9 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 * Sat Oct 20 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.1-1
 - Release of 17.11.11
 
+* Thu Oct 11 2018 Yu Watanabe <watanabe.yu@gmail.com> - 17.11.10-1
+- Release of 17.11.10
+
 * Fri Sep 28 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.9-2
 - Release of 17.11.9-2 (new upstream tarball)
 
