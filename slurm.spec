@@ -11,7 +11,7 @@
 %undefine _strict_symbol_defs_build
 
 Name:           slurm
-Version:        17.11.11
+Version:        17.11.12
 Release:        1%{?dist}
 Summary:        Simple Linux Utility for Resource Management
 License:        GPLv2 and BSD
