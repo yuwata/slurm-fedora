@@ -722,7 +722,10 @@ rm -f %{buildroot}%{perl_archlib}/perllocal.pod
 %systemd_postun_with_restart slurmdbd.service
 
 %changelog
-* Sat Oct 20 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.1-1
+* Wed Oct 24 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.12-1
+- Release of 17.11.12
+
+* Sat Oct 20 2018 Philip Kovacs <pkdevel@yahoo.com> - 17.11.11-1
 - Release of 17.11.11
 
 * Thu Oct 11 2018 Yu Watanabe <watanabe.yu@gmail.com> - 17.11.10-1
